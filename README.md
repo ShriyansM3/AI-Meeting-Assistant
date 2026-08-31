@@ -1,4 +1,4 @@
-# AI Video Assistant with RAG
+# AI Meeting Assistant with RAG
 
 An AI-powered meeting assistant that processes YouTube videos and local audio/video files to generate transcripts, summaries, action items, key decisions, and context-aware question answering using Retrieval-Augmented Generation (RAG).
 
