@@ -26,18 +26,17 @@ An AI-powered meeting assistant that processes YouTube videos and local audio/vi
 - pydub
 
 ## How It Works
-
 1. Input a YouTube URL or local media file.
-2. The application extracts and preprocesses the audio.
-3. Audio is transcribed using Whisper or Sarvam AI based on the selected language.
-4. The transcript is analyzed to generate:
+2. The application extracts and preprocesses the audio, splitting long recordings into 10-minute segments and further into 25-second API-compatible chunks to support long-form audio processing.
+3. Audio is transcribed using Whisper (English) or Sarvam AI (Hinglish), based on the selected language.
+4. The transcript is analyzed using LangChain and Mistral AI to generate:
    - Meeting title
    - Summary
    - Action items
    - Key decisions
    - Open questions
-5. The transcript is converted into embeddings and stored in ChromaDB.
-6. Users can ask natural-language questions that are answered using retrieval over the meeting transcript.
+5. The transcript is split into 500-character overlapping chunks, converted into embeddings using Hugging Face models, and indexed in ChromaDB.
+6. Users can ask natural-language questions; the system retrieves the top-4 most semantically relevant chunks and generates grounded answers over them.
 
 ## Project Structure
 
