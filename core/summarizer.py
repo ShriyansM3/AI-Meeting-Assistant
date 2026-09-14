@@ -53,27 +53,21 @@ def summarize(transcript : str) -> str:
 
     result = combined_chain.invoke({"text": combined})
 
-def generate_title(transcipt : str) -> str:
+def generate_title(transcript: str) -> str:
     llm = get_llm()
 
-    
+    prompt = ChatPromptTemplate.from_messages([
+        (
+            "system",
+            "Based on the meeting transcript, generate a short professional meeting title "
+            "(max 8 words). Only return the title, nothing else.",
+        ),
+        ("human", "{text}"),
+    ])
 
-    title_chain = (
-        RunnablePassthrough() | RunnableLambda(lambda x:{"text":x}) | 
-        ChatPromptTemplate.from_messages([
-             (
-                "system",
-                "Based on the meeting transcript, generate a short professional meeting title "
-                "(max 8 words). Only return the title, nothing else.",
-            ),
-            ("human", "{text}"),
-        ])
-        | llm
-        |StrOutputParser()
-    )
+    title_chain = prompt | llm | StrOutputParser()
 
-    return title_chain.invoke(transcipt[:2000])
-
-
+    # Pass the dictionary directly during invocation
+    return title_chain.invoke({"text": transcript[:2000]}).strip()
 
 
