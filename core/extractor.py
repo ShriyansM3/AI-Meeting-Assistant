@@ -12,14 +12,15 @@ def get_llm():
 
 
 
-def build_chain(system_prompt : str):
+def build_chain(system_prompt: str):
     llm = get_llm()
-    return (
-        RunnablePassthrough() | RunnableLambda(lambda x : {"text" : x}) |ChatPromptTemplate.from_messages([
+    prompt = ChatPromptTemplate.from_messages([
         ("system", system_prompt),
-        ("human","{text}"),
-    ]) | llm |StrOutputParser()
-    )
+        ("human", "{text}"),
+    ])
+    
+   
+    return prompt | llm | StrOutputParser()
 
 def extract_action_items(transcript:str)->str:
     chain = build_chain(
@@ -31,7 +32,7 @@ def extract_action_items(transcript:str)->str:
         "Format as a numbered list. If none found say 'No action items found.'"
     )
 
-    return chain.invoke(transcript)
+    return chain.invoke({"text": transcript})
 
 
 def extract_key_decisions(transcript: str) -> str:
@@ -40,7 +41,7 @@ def extract_key_decisions(transcript: str) -> str:
         "extract all key decisions made. Format as a numbered list. "
         "If none found say 'No key decisions found.'"
     )
-    return chain.invoke(transcript)
+    return chain.invoke({"text": transcript})
 
 
 def extract_questions(transcript: str) -> str:
@@ -49,4 +50,4 @@ def extract_questions(transcript: str) -> str:
         "or topics needing follow-up. Format as a numbered list. "
         "If none found say 'No open questions found.'"
     )
-    return chain.invoke(transcript)
+    return chain.invoke({"text": transcript})
